@@ -1,0 +1,76 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block title %}{{ evento.titulo }}{% endblock %}
+{% block segundo_nav%}
+  {% include 'eventos/includes/eventos_menu.html'%}
+{% endblock %}
+{% block content %}
+<main role="main">
+  <div class="container my-5">
+    <div class="row">
+      <div class="col-md-8 mx-auto">
+        <!-- Ficha del Evento -->
+        {% if 'ok' in request.GET %}
+          <b><p style="color:green;">Evento editado correctamente.</p></b>
+        {% endif %}
+        <div class="card shadow-sm rounded-3">
+          <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Ficha del Evento</h4>
+          </div>
+          <div class="card-body">
+            <h3 class="card-title text-center mb-4">{{ evento.titulo }}</h3>
+            <hr>
+            <dl class="row">
+              <!-- Nombre -->
+              <dt class="col-sm-3 text-truncate">Evento:</dt>
+              <dd class="col-sm-9">{{ evento.titulo }}</dd>
+
+              <!-- Responsable -->
+              <dt class="col-sm-3 text-truncate">Responsable:</dt>
+              <dd class="col-sm-9">{{ evento.responsable }}</dd>
+
+              <!-- Lugar -->
+              <dt class="col-sm-3 text-truncate">Lugar:</dt>
+              <dd class="col-sm-9">{{ evento.lugar }}</dd>
+
+              <!-- Módulo -->
+              <dt class="col-sm-3 text-truncate">Módulo:</dt>
+              <dd class="col-sm-9">{{ evento.modulo }}</dd>
+
+              <!-- Fecha -->
+              <dt class="col-sm-3 text-truncate">Email:</dt>
+              <dd class="col-sm-9">{{ evento.fecha }}</dd>
+
+              <!-- Hora -->
+              <dt class="col-sm-3 text-truncate">Hora:</dt>
+              <dd class="col-sm-9">{{ evento.hora_inicio|time:"H:i" }} - {{ evento.hora_fin|time:"H:i" }}</dd>
+
+              <!-- Descripción -->
+              <dt class="col-sm-3 text-truncate">Descripción:</dt>
+              <dd class="col-sm-9">{{ evento.descripcion|safe }}</dd>
+            </dl>
+          </div>
+          <div class="card-footer bg-light d-flex justify-content-between">
+            <!-- Botón Volver -->
+            <a href="{% url 'eventos:evento_list' %}" class="btn btn-secondary">
+              Volver
+            </a>
+
+            {% if request.user.is_staff %}
+            <!-- Botones de Editar y Borrar (solo para staff) -->
+            <div>
+              <a href="{% url 'eventos:evento_update' object.pk %}" class="btn btn-warning me-2">
+                Editar
+              </a>
+              <a href="{% url 'eventos:evento_delete' object.pk %}" class="btn btn-danger">
+                Borrar
+              </a>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}

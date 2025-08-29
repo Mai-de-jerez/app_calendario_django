@@ -1,0 +1,140 @@
+/* Configuración para la fuente variable Raleway */
+@font-face {
+  font-family: 'Raleway';
+  src: url('../fonts/Raleway-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Raleway';
+  src: url('../fonts/Raleway-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}
+
+/* Configuración para la fuente variable Lora */
+@font-face {
+  font-family: 'Lora';
+  src: url('../fonts/Lora-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Lora';
+  src: url('../fonts/Lora-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 400 700;
+  font-style: italic;
+}
+
+
+/* Color barra de navegación y de los enlaces */
+.bg-naranja {
+  background-color: #db500a;
+}
+
+.navbar-transparent {
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.navbar-brand {
+    color: #fff !important;
+}
+
+.nav-link {
+    color: #fff !important;
+}
+
+.nav-link:hover {
+    color: rgba(255, 255, 255, .75) !important;
+}
+
+/* Nuevas reglas para la barra de navegación transparente */
+.navbar-transparent .navbar-brand {
+  color: #000 !important;
+}
+
+.navbar-transparent .nav-link {
+  color: #000 !important;
+}
+
+.navbar-transparent .nav-link:hover {
+  color: rgba(0, 0, 0, .75) !important;
+}
+
+h1, h2, h3, h4, h5, h6, .jumbotron-heading {
+  font-family: 'Lora', serif;
+}
+
+/* El resto de tus estilos CSS */
+main{
+    padding-top: 20px;
+}
+:root {
+    --jumbotron-padding-y: 3rem;
+}
+
+.jumbotron {
+    padding-top: var(--jumbotron-padding-y);
+    padding-bottom: var(--jumbotron-padding-y);
+    margin-bottom: 0;
+    background-color: #fff;
+}
+@media (min-width: 768px) {
+    .jumbotron {
+        padding-top: calc(var(--jumbotron-padding-y) * 2);
+        padding-bottom: calc(var(--jumbotron-padding-y) * 2);
+    }
+}
+
+.jumbotron p:last-child {
+    margin-bottom: 0;
+}
+
+.jumbotron-heading {
+    font-weight: 300;
+}
+
+.jumbotron .container {
+max-width: 40rem;
+}
+
+body {
+  font-family: 'Raleway', sans-serif;
+  /* Define la imagen de fondo y su ruta */
+  background-image: url('../img/fondo.jpg');
+
+  /* Opciones para que la imagen se vea bien */
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-attachment: fixed; /* Mantiene la imagen fija al hacer scroll */
+  background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+  background-position: center; /* Centra la imagen */
+   
+}
+
+
+/* Estilos para el contenedor de contenido principal */
+.content-wrapper {
+    background-color: rgba(255, 255, 255, 0.8); /* Blanco con 80% de opacidad */
+    padding: 20px; /* Espacio para que el texto no se pegue a los bordes */
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    margin-top: 20px; /* Espacio entre la barra de navegación y el contenido */
+    margin-bottom: 20px; /* Espacio entre el contenido y el pie de página */
+}
+
+footer {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+footer p {
+    margin-bottom: .25rem;
+}
+
+.box-shadow { 
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05); 
+}
+
+
+
