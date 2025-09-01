@@ -39,7 +39,7 @@ class Evento(models.Model):
     lugar = models.ForeignKey(Lugar, on_delete=models.PROTECT, related_name='eventos_lugar')
     
     # El módulo debe ser uno de los módulos registrados
-    modulo = models.ForeignKey(Modulo, on_delete=models.PROTECT, related_name='eventos_modulo')
+    modulo = models.ManyToManyField(Modulo, related_name='eventos_modulo')
     
     # Campo de texto largo para la descripción del evento
     descripcion = models.TextField(blank=True)

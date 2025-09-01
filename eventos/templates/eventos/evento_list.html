@@ -1,3 +1,4 @@
+{# evento_list.html #}
 {% extends 'core/base.html' %}
 {% load static %}
 {% block title %}Eventos{% endblock %}
@@ -27,7 +28,11 @@
                 <td>{{ evento.titulo }}</td>
                 <td>{{ evento.responsable }}</td>
                 <td>{{ evento.lugar }}</td>
-                <td>{{ evento.modulo }}</td>
+                <td>
+                  {% for modulo in evento.modulo.all %}
+                    {{ modulo.nombre }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
                 <td>
                     <a href="{% url 'eventos:evento_detail' evento.id %}">Ver detalles</a>
                 </td>

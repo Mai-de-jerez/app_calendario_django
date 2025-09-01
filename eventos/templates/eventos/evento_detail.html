@@ -1,3 +1,4 @@
+{# evento_detail.html #}
 {% extends 'core/base.html' %}
 {% load static %}
 {% block title %}{{ evento.titulo }}{% endblock %}
@@ -35,7 +36,11 @@
 
               <!-- Módulo -->
               <dt class="col-sm-3 text-truncate">Módulo:</dt>
-              <dd class="col-sm-9">{{ evento.modulo }}</dd>
+              <dd class="col-sm-9">
+                {% for modulo in evento.modulo.all %}
+                  {{ modulo.nombre }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+              </dd>
 
               <!-- Fecha -->
               <dt class="col-sm-3 text-truncate">Email:</dt>

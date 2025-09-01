@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import (
     EventoListView, EventoDetailView, EventoCreate, 
-    EventoUpdate, EventoDelete
+    EventoUpdate, EventoDelete, EventoApiView, CalendarioView
 )
 from . import views
 
@@ -17,11 +17,10 @@ eventos_patterns = ([
     path('<int:pk>/editar/', EventoUpdate.as_view(), name='evento_update'),
     # Elimina un evento
     path('<int:pk>/eliminar/', EventoDelete.as_view(), name='evento_delete'),
-    # API para obtener la lista de eventos en formato JSON
-    path('api/eventos/', views.lista_eventos_api, name='lista_eventos_api'),
+ # API para obtener la lista de eventos en formato JSON
+    path('api/eventos/', EventoApiView.as_view(), name='lista_eventos_api'),
     
     # Vista para renderizar el calendario
-    
-    path('calendario/', views.calendario, name='calendario'),
+    path('calendario/', CalendarioView.as_view(), name='calendario'),
     
 ], 'eventos')

@@ -1,0 +1,22 @@
+body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffffff;
+            padding-top: 70px; /* Para evitar que el contenido se superponga con la barra de navegación */
+            margin: 0;
+            height: 100vh;
+        }
+        .bg-naranja {
+            background-color: #db500a !important;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+
+     
+        #calendar-container {
+            padding-top: 20px;
+            height: calc(100vh - 70px); /* Ocupa el 100% de la altura menos la barra de navegación */
+        }
+        #calendar {
+            height: 100%; /* El calendario ocupará toda la altura de su contenedor */
+        }

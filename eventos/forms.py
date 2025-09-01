@@ -23,10 +23,12 @@ class EventoForm(forms.ModelForm):
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'form-control autocomplete-field'})
     )
-    modulo_nombre = forms.CharField(
-        label="Módulo",
-        max_length=100,
-        widget=forms.TextInput(attrs={'class': 'form-control autocomplete-field'})
+   
+    # Este campo de texto se usará para agregar los módulos dinámicamente en el frontend
+    modulo_nombres = forms.CharField(
+        label="Módulos (separar los módulos con comas)",
+        max_length=255,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
     )
 
     fecha = forms.DateField(
@@ -67,9 +69,8 @@ class EventoForm(forms.ModelForm):
         self.lugar_instance = self.clean_foreignkey_field(
             'lugar_nombre', cleaned_data, Lugar, "lugar"
         )
-        self.modulo_instance = self.clean_foreignkey_field(
-            'modulo_nombre', cleaned_data, Modulo, "módulo"
-        )
+        # Validación personalizada para el campo de módulos
+        self.modulo_instances = self.clean_modulo_field(cleaned_data.get('modulo_nombres'))
 
         # Validación de superposición de eventos
         hora_inicio = cleaned_data.get('hora_inicio')
@@ -92,6 +93,28 @@ class EventoForm(forms.ModelForm):
                     raise forms.ValidationError(f"Este evento se superpone con el evento '{evento.titulo}' en día y hora.")
         
         return cleaned_data
+    
+    def clean_modulo_field(self, modulo_nombres_str):
+        """
+        Método auxiliar para validar los nombres de los módulos y devolver las instancias.
+        """
+        if not modulo_nombres_str:
+            raise forms.ValidationError("Debe seleccionar al menos un módulo para el evento.")
+
+        modulos = []
+        nombres_modulos = [nombre.strip() for nombre in modulo_nombres_str.split(',') if nombre.strip()]
+
+        for nombre in nombres_modulos:
+            try:
+                modulo_instance = Modulo.objects.get(nombre__iexact=nombre)
+                modulos.append(modulo_instance)
+            except ObjectDoesNotExist:
+                raise forms.ValidationError(f"El módulo '{nombre}' no existe.")
+            except MultipleObjectsReturned:
+                raise forms.ValidationError(f"Existen múltiples módulos con el nombre '{nombre}'. Por favor, sé más específico.")
+
+        # Devolver un conjunto para evitar duplicados si se han introducido
+        return list(set(modulos))
 
     def clean_empleado_field(self, nombre, apellidos):
         """
@@ -144,10 +167,12 @@ class EventoForm(forms.ModelForm):
         # Asignar las instancias obtenidas en clean()
         evento.responsable = self.responsable_instance
         evento.lugar = self.lugar_instance
-        evento.modulo = self.modulo_instance
         
         if commit:
             evento.save()
+            # Guardar la relación muchos a muchos después de guardar el evento principal
+            # Usamos set() para asignar todos los módulos de una vez.
+            evento.modulo.set(self.modulo_instances)
         return evento
 
 class EventoUpdateForm(EventoForm):
@@ -160,5 +185,7 @@ class EventoUpdateForm(EventoForm):
             self.initial['responsable_apellidos'] = self.instance.responsable.apellidos
         if self.instance and self.instance.lugar:
             self.initial['lugar_nombre'] = self.instance.lugar.nombre
-        if self.instance and self.instance.modulo:
-            self.initial['modulo_nombre'] = self.instance.modulo.nombre
+        # Para el campo de módulos, debemos unir los nombres en una cadena separada por comas
+        if self.instance and self.instance.modulo.exists():
+            modulos_nombres = ", ".join([m.nombre for m in self.instance.modulo.all()])
+            self.initial['modulo_nombres'] = modulos_nombres
