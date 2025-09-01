@@ -1,3 +1,7 @@
-db.sqlite3
+# Python cache
 __pycache__/
+*.pyc
+*.pyo
 
+# SQLite (u otras db locales)
+*.db
