@@ -9,10 +9,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     center: 'title',
                     right: 'today dayGridMonth,timeGridWeek,timeGridDay'
                 },
+
+                
+                initialView: 'timeGridWeek', // o timeGridDay
+                slotLabelFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false // esto asegura formato 24 horas
+                },
+                
+
                 events: '/eventos/api/eventos/',
                 displayEventTime: false,
                 fixedWeekCount: true,
-                dayMaxEvents: true // Activa el botón "+X más"
+                dayMaxEvents: true, // Activa el botón "+X más"
+
+                eventClick: function(info) {
+                // Redirige al usuario a la URL de detalles del evento
+                window.location.href = info.event.url;
+                }
             });
             calendar.render();
         });

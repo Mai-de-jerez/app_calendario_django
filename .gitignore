@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 *.pyo
 
-# SQLite (u otras db locales)
-*.db
+# Archivos de la base de datos de Django
+db.sqlite3

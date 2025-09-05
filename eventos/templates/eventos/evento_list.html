@@ -8,6 +8,11 @@
 {% block content %}
 <main role="main">
   <div class="container mb-4">
+    {% if 'ok' in request.GET %}
+      <div class="alert alert-success">
+        Operación realizada correctamente.
+      </div>
+    {% endif %}
     <div class="row mt-3">
       <div class="col-md-9 mx-auto">
         <h2 class="mb-4">Lista de Eventos</h2>

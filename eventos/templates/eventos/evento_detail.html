@@ -11,9 +11,6 @@
     <div class="row">
       <div class="col-md-8 mx-auto">
         <!-- Ficha del Evento -->
-        {% if 'ok' in request.GET %}
-          <b><p style="color:green;">Evento editado correctamente.</p></b>
-        {% endif %}
         <div class="card shadow-sm rounded-3">
           <div class="card-header bg-primary text-white">
             <h4 class="mb-0">Ficha del Evento</h4>
@@ -57,9 +54,9 @@
           </div>
           <div class="card-footer bg-light d-flex justify-content-between">
             <!-- Botón Volver -->
-            <a href="{% url 'eventos:evento_list' %}" class="btn btn-secondary">
+            <button onclick="window.history.back()" class="btn btn-secondary">
               Volver
-            </a>
+            </button>
 
             {% if request.user.is_staff %}
             <!-- Botones de Editar y Borrar (solo para staff) -->

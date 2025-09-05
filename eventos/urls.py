@@ -3,7 +3,6 @@ from .views import (
     EventoListView, EventoDetailView, EventoCreate, 
     EventoUpdate, EventoDelete, EventoApiView, CalendarioView
 )
-from . import views
 
 
 eventos_patterns = ([

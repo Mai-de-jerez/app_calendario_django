@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Evento, Lugar 
@@ -36,7 +36,10 @@ class EventoDetailView(DetailView):
 class EventoCreate(CreateView):
     model = Evento
     form_class =EventoForm
-    success_url = reverse_lazy('eventos:evento_list')
+
+    def get_success_url(self):
+        # Redirige al listado de eventos con '?ok' para indicar que se creó correctamente
+        return reverse_lazy('eventos:evento_list') + '?ok'
     
 
 
@@ -47,29 +50,32 @@ class EventoUpdate(UpdateView):
     template_name_suffix = '_update_form'
     
     def get_success_url(self):
-        # Redirige a la URL de la ficha individual, usando el pk y el slug del objeto.
-        return reverse_lazy('eventos:evento_detail', args=[self.object.pk]) + '?ok'
-    
+        # Redirige al listado de eventos con un parámetro de consulta 'ok' para indicar éxito
+        return reverse_lazy('eventos:evento_list') + '?ok'
+        
 
 
 @method_decorator(staff_member_required, name="dispatch")   
 class EventoDelete(DeleteView):
     model = Evento
-    success_url = reverse_lazy('eventos:evento_list')
+
+    def get_success_url(self):
+        # Redirige al listado de eventos con '?ok' para indicar que se eliminó correctamente
+        return reverse_lazy('eventos:evento_list') + '?ok'
 
 # Vista de la API para el calendario
 class EventoApiView(View):
     def get(self, request, *args, **kwargs):
-        eventos = Evento.objects.all().values('titulo', 'fecha', 'hora_inicio', 'hora_fin')
+        eventos = Evento.objects.all()
         
-        # Formateamos los datos para FullCalendar.
-        # En la API, la fecha de fin es la misma que la fecha de inicio.
         eventos_formateados = []
         for evento in eventos:
             eventos_formateados.append({
-                'title': evento['titulo'],
-                'start': f"{evento['fecha']}T{evento['hora_inicio']}",
-                'end': f"{evento['fecha']}T{evento['hora_fin']}",
+                'title': evento.titulo,
+                # Usamos .isoformat() para formatear las fechas y horas correctamente
+                'start': f"{evento.fecha.isoformat()}T{evento.hora_inicio.isoformat()}",
+                'end': f"{evento.fecha.isoformat()}T{evento.hora_fin.isoformat()}",
+                'url': reverse('eventos:evento_detail', args=[evento.pk])
             })
         
         return JsonResponse(eventos_formateados, safe=False)
