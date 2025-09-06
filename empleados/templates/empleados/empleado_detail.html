@@ -48,10 +48,10 @@
           </div>
           <div class="card-footer bg-light d-flex justify-content-between">
             <!-- Botón Volver -->
-            <a href="{% url 'empleados:empleados' %}" class="btn btn-secondary">
+            <button onclick="window.history.back()" class="btn btn-secondary">
               Volver
-            </a>
-
+            </button>
+            
             {% if request.user.is_staff %}
             <!-- Botones de Editar y Borrar (solo para staff) -->
             <div>

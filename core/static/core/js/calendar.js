@@ -9,16 +9,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     center: 'title',
                     right: 'today dayGridMonth,timeGridWeek,timeGridDay'
                 },
-
                 
-                initialView: 'timeGridWeek', // o timeGridDay
                 slotLabelFormat: {
                     hour: '2-digit',
                     minute: '2-digit',
-                    hour12: false // esto asegura formato 24 horas
+                    hour12: false // Esto asegura el formato de 24 horas
                 },
-                
-
+                        
                 events: '/eventos/api/eventos/',
                 displayEventTime: false,
                 fixedWeekCount: true,
