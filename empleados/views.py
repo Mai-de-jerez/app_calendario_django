@@ -30,7 +30,9 @@ class EmpleadoDetailView(DetailView):
 class EmpleadoCreate(CreateView):
     model = Empleado
     form_class =EmpleadoForm
-    success_url = reverse_lazy('empleados:empleados')
+   
+    def get_success_url(self):
+        return reverse_lazy('empleados:empleados') + '?ok'
 
 @method_decorator(staff_member_required, name="dispatch")
 class EmpleadoUpdate(UpdateView):
@@ -40,11 +42,13 @@ class EmpleadoUpdate(UpdateView):
     
     def get_success_url(self):
         # Redirige a la URL de la ficha individual, usando el pk y el slug del objeto.
-        return reverse_lazy('empleados:empleado', args=[self.object.pk]) + '?ok'
+        return reverse_lazy('empleados:empleados') + '?ok'
     
 
 @method_decorator(staff_member_required, name="dispatch")   
 class EmpleadoDelete(DeleteView):
     model = Empleado
-    success_url = reverse_lazy('empleados:empleados')
+
+    def get_success_url(self):
+        return reverse_lazy('empleados:empleados') + '?ok'
 

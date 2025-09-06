@@ -5,18 +5,30 @@ from .models import Evento, Lugar
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils.decorators import method_decorator
 from .forms import EventoForm, EventoUpdateForm
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views import View
+from django.contrib.auth.mixins import AccessMixin
 
 # Create your views here.
-class StaffRequiredMixin(object):
+
+class OwnerOrSuperuserRequiredMixin(AccessMixin):
     """
-    Este mixin requerirá que el usuario sea miembro del staff
+    Mixin que comprueba si el usuario es un superusuario o el creador del objeto.
     """
-    @method_decorator(staff_member_required)
     def dispatch(self, request, *args, **kwargs):
-        return super(StaffRequiredMixin, self).dispatch(request, *args, **kwargs)
+        if not request.user.is_authenticated:
+            return self.handle_no_permission()
+
+        # Obtiene el objeto para verificar la propiedad
+        obj = get_object_or_404(self.get_queryset(), pk=self.kwargs['pk'])
+
+        # Comprueba si el usuario es superusuario o el creador del objeto
+        if not (request.user.is_superuser or obj.creador == request.user):
+            # Redirige a una página de acceso denegado o a la lista de eventos
+            return redirect('eventos:evento_list')
+            
+        return super().dispatch(request, *args, **kwargs)
 
 class EventoListView(ListView):
     """
@@ -31,36 +43,32 @@ class EventoDetailView(DetailView):
     """
     model = Evento
 
-
-@method_decorator(staff_member_required, name="dispatch")
-class EventoCreate(CreateView):
+    
+class EventoCreate(LoginRequiredMixin, CreateView):
     model = Evento
-    form_class =EventoForm
+    form_class = EventoForm
+
+    def form_valid(self, form):
+        form.instance.creador = self.request.user
+        return super().form_valid(form)
 
     def get_success_url(self):
-        # Redirige al listado de eventos con '?ok' para indicar que se creó correctamente
         return reverse_lazy('eventos:evento_list') + '?ok'
-    
 
 
-@method_decorator(staff_member_required, name="dispatch")
-class EventoUpdate(UpdateView):
+class EventoUpdate(OwnerOrSuperuserRequiredMixin, UpdateView):
     model = Evento
-    form_class =EventoUpdateForm
+    form_class = EventoUpdateForm
     template_name_suffix = '_update_form'
     
     def get_success_url(self):
-        # Redirige al listado de eventos con un parámetro de consulta 'ok' para indicar éxito
         return reverse_lazy('eventos:evento_list') + '?ok'
         
 
-
-@method_decorator(staff_member_required, name="dispatch")   
-class EventoDelete(DeleteView):
+class EventoDelete(OwnerOrSuperuserRequiredMixin, DeleteView):
     model = Evento
-
+    
     def get_success_url(self):
-        # Redirige al listado de eventos con '?ok' para indicar que se eliminó correctamente
         return reverse_lazy('eventos:evento_list') + '?ok'
 
 # Vista de la API para el calendario

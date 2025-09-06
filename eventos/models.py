@@ -48,6 +48,13 @@ class Evento(models.Model):
     fecha = models.DateField()
     hora_inicio = models.TimeField()
     hora_fin = models.TimeField()
+
+    # Campo que guarda el usuario que creó este evento
+    creador = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='eventos_creados'
+    )
     
     class Meta:
         ordering = ['fecha', 'hora_inicio']

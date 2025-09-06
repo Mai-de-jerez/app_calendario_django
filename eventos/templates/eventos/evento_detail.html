@@ -58,7 +58,7 @@
               Volver
             </button>
 
-            {% if request.user.is_staff %}
+            {% if request.user.is_superuser or evento.creador == request.user %}
             <!-- Botones de Editar y Borrar (solo para staff) -->
             <div>
               <a href="{% url 'eventos:evento_update' object.pk %}" class="btn btn-warning me-2">
