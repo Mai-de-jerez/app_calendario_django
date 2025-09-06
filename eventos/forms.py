@@ -157,12 +157,18 @@ class EventoForm(forms.ModelForm):
             self.add_error(field_name, f"Existen múltiples {verbose_name}s con este nombre. Por favor, sé más específico.")
         
         return None
+    
 
-    def save(self, commit=True):
+    def save(self, commit=True, creador=None):
         """
-        Sobreescribe el método save() para asignar los objetos relacionados antes de guardar el evento.
+        Sobreescribe el método save() para asignar los objetos relacionados
+        y el creador antes de guardar el evento.
         """
         evento = super().save(commit=False)
+        
+        # Asignar el creador si se proporciona
+        if creador:
+            evento.creador = creador
         
         # Asignar las instancias obtenidas en clean()
         evento.responsable = self.responsable_instance
@@ -173,7 +179,9 @@ class EventoForm(forms.ModelForm):
             # Guardar la relación muchos a muchos después de guardar el evento principal
             # Usamos set() para asignar todos los módulos de una vez.
             evento.modulo.set(self.modulo_instances)
+            
         return evento
+    
 
 class EventoUpdateForm(EventoForm):
     def __init__(self, *args, **kwargs):

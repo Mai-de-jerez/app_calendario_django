@@ -23,8 +23,14 @@ class CustomUser(AbstractUser):
     )
 
 def custom_upload_to(instance, filename):
-    old_instance = Profile.objects.get(pk=instance.pk)
-    old_instance.avatar.delete()  # Elimina la imagen antigua si existe
+    # Solo intentamos borrar el avatar antiguo si el objeto ya existe
+    if instance.pk:
+        try:
+            old_instance = Profile.objects.get(pk=instance.pk)
+            if old_instance.avatar:  # Solo si existe avatar anterior
+                old_instance.avatar.delete(save=False)
+        except Profile.DoesNotExist:
+            pass
     return 'profiles/' + filename
 
 class Profile(models.Model):
